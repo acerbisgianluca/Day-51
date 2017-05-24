@@ -70,7 +70,7 @@ bullet_img.set_colorkey(BLACK)
 #save record
 def saveRecord():
 	file = open('record/save.txt', 'w')
-	file.write(str(score))
+	file.write(str(record))
 	file.close()
 
 #load record
@@ -80,9 +80,11 @@ def loadRecord():
 	file.close()
 	return data
 
-#score
+#score & bonus
 score = 0
 record = int(loadRecord())
+newRecord = False
+bonus = 1
 
 def bgGen():
 	screen.fill(BLACK)
@@ -94,11 +96,12 @@ def showIntro():
 
 def showSummary():
 	print_text("SUMMARY", (250, 100), font1, WHITE, BLACK)
-	print_text("SCORE = {0}".format(score), (250, 300), font1, YELLOW, BLACK)
+	print_text("SCORE = {0}".format(score), (250, 250), font1, YELLOW, BLACK)
 	if newRecord:
-		print_text("NEW RECORD = {0}".format(record), (175, 400), font1, RED, BLACK)
+		print_text("NEW RECORD = {0}".format(record), (175, 350), font1, RED, BLACK)
 	else:
-		print_text("RECORD = {0}".format(record), (250, 400), font1, RED, BLACK)
+		print_text("RECORD = {0}".format(record), (200, 350), font1, RED, BLACK)
+	print_text("PRESS ESC TO QUIT!", (250, 500), font2, YELLOW, BLACK)
 
 def quit():
 	pygame.quit()
@@ -145,7 +148,7 @@ class Mob(pygame.sprite.Sprite):
                 self.rect.x = random.randrange(0, WIDTH - self.rect.width)
                 self.rect.y = random.randrange(-100, -40)
                 self.speedx = random.randrange(-3,3)
-                self.speedy = random.randrange(1,8)
+                self.speedy = bonus * random.randrange(1,6)
                 self.rot = 0
                 self.rotspeed = random.randrange(-8,8)
                 self.last_update = pygame.time.get_ticks()
@@ -192,6 +195,8 @@ while intro:
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_SPACE:
 				intro = False
+			if event.key == pygame.K_ESCAPE:
+				quit()
 		elif event.type == pygame.QUIT:
 			quit()
 	bgGen()
@@ -243,20 +248,22 @@ while running:
                 all_sprites.add(m)
                 mobs.add(m)
                 score += 10
+                if(score % 1000 == 0):
+                	bonus += 1
 
         #draw
         bgGen()
         all_sprites.draw(screen) #disegna tutti gli sprite
+        if record < score:
+        	record = score
+        	newRecord = True
         print_text("SCORE = {0}".format(score), (575,10), font2, RED, BLACK)
         print_text("RECORD = {0}".format(record), (575,30), font2, YELLOW, BLACK)
         pygame.display.flip()
 
-if record < score:
-	record = score
-	newRecord = True
+#save record
+if newRecord:
 	saveRecord()
-else:
-	newRecord = False
 
 while True:
 	for event in pygame.event.get():
