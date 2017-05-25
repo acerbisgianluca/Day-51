@@ -49,7 +49,7 @@ icon = pygame.transform.scale(icon, (32,32))
 pygame.display.set_icon(icon)
 
 #sprites image
-background = pygame.image.load('background/darkPurple.png').convert()
+background = pygame.image.load('background/bg.png').convert()
 background = pygame.transform.scale(background, SCREED_D)
 background_rect = background.get_rect()
 
@@ -230,7 +230,6 @@ while running:
                 if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                         		now = pygame.time.get_ticks()
-                        		print str(now) + "-" + str(previous) 
                         		if now - previous > DELTASHOOT:
                         				previous = pygame.time.get_ticks()
                                 			player.shoot()
