@@ -54,8 +54,8 @@ background = pygame.transform.scale(background, SCREED_D)
 background_rect = background.get_rect()
 
 player_img = pygame.image.load('sprites/player.png').convert()
-player_img = pygame.transform.scale(player_img, (50,40))
-player_img.set_colorkey(BLACK)
+player_img = pygame.transform.scale(player_img, (60,50))
+player_img.set_colorkey(WHITE)
 
 mob_img = pygame.image.load('sprites/mob.png').convert()
 mob_img.set_colorkey(BLACK)
@@ -96,7 +96,7 @@ def showIntro():
 
 def showSummary():
 	print_text("SUMMARY", (250, 100), font1, WHITE, BLACK)
-	print_text("SCORE = {0}".format(score), (250, 250), font1, YELLOW, BLACK)
+	print_text("SCORE = {0}".format(score), (225, 250), font1, YELLOW, BLACK)
 	if newRecord:
 		print_text("NEW RECORD = {0}".format(record), (175, 350), font1, RED, BLACK)
 	else:
@@ -141,7 +141,7 @@ class Mob(pygame.sprite.Sprite):
         def __init__(self):
                 pygame.sprite.Sprite.__init__(self)
                 self.original_image = mob_list[random.randrange(0,2)]
-                self.original_image = pygame.transform.scale(self.original_image, (random.randrange(30,60),random.randrange(30,60)))
+                self.original_image = pygame.transform.scale(self.original_image, (random.randrange(50,80),random.randrange(50,80)))
                 self.image = self.original_image.copy()
                 self.rect = self.image.get_rect()
                 self.rect.x = random.randrange(0, WIDTH - self.rect.width)
