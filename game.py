@@ -16,7 +16,7 @@ GREEN = (0,255,0)
 YELLOW = (255,255,0)
 
 #time between each shoot
-DELTASHOOT = 90
+DELTASHOOT = 100
 
 pygame.init()
 
@@ -118,7 +118,6 @@ class Player(pygame.sprite.Sprite):
                 self.speedx = 0
 
         def shoot(self):
-        	previous = pygame.time.get_ticks()
         	bullet = Bullet(self.rect.centerx, self.rect.top)
 	        shoot_music.play()
 	        all_sprites.add(bullet)
@@ -148,7 +147,7 @@ class Mob(pygame.sprite.Sprite):
                 self.rect.x = random.randrange(0, WIDTH - self.rect.width)
                 self.rect.y = random.randrange(-100, -40)
                 self.speedx = random.randrange(-3,3)
-                self.speedy = bonus * random.randrange(1,6)
+                self.speedy = bonus + random.randrange(1,5)
                 self.rot = 0
                 self.rotspeed = random.randrange(-8,8)
                 self.last_update = pygame.time.get_ticks()
@@ -231,8 +230,10 @@ while running:
                 if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                         		now = pygame.time.get_ticks()
+                        		print str(now) + "-" + str(previous) 
                         		if now - previous > DELTASHOOT:
-                                		player.shoot()
+                        				previous = pygame.time.get_ticks()
+                                			player.shoot()
 
         #update
         all_sprites.update()
@@ -248,7 +249,7 @@ while running:
                 all_sprites.add(m)
                 mobs.add(m)
                 score += 10
-                if(score % 1000 == 0):
+                if(score % 500 == 0):
                 	bonus += 1
 
         #draw
