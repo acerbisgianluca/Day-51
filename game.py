@@ -16,7 +16,7 @@ GREEN = (0,255,0)
 YELLOW = (255,255,0)
 
 #time between each shoot
-DELTASHOOT = 100
+DELTASHOOT = 90
 
 pygame.init()
 
@@ -62,6 +62,9 @@ mob_list = [mob_img, mob_img1]
 bullet_img = pygame.image.load('sprites/bullet.png').convert()
 bullet_img = pygame.transform.scale(bullet_img, (10,30))
 bullet_img.set_colorkey(BLACK)
+powerUp_img = pygame.image.load('sprites/powerUp.png').convert()
+powerUp_img = pygame.transform.scale(powerUp_img, (30,40))
+powerUp_img.set_colorkey(BLACK)
 
 #save record
 def saveRecord():
@@ -81,6 +84,7 @@ score = 0
 record = int(loadRecord())
 newRecord = False
 bonus = 1
+powerUpBool = False
 
 #background generator
 def bgGen():
@@ -147,7 +151,7 @@ class Mob(pygame.sprite.Sprite):
 		self.rect.x = random.randrange(0, WIDTH - self.rect.width)
 		self.rect.y = random.randrange(-100, -40)
 		self.speedx = random.randrange(-3,3)
-		self.speedy = bonus + random.randrange(1,5)
+		self.speedy = random.randrange(1,5)
 		self.rot = 0
 		self.rotspeed = random.randrange(-8,8)
 		self.last_update = pygame.time.get_ticks()
@@ -162,16 +166,40 @@ class Mob(pygame.sprite.Sprite):
 			self.rect = self.image.get_rect()
 			self.rect.center = old_center
 
-
 	def update(self):
+		global powerUpBool
 		self.rect.x += self.speedx
-		self.rect.y += self.speedy
+		if powerUpBool:
+			nowPowerUp = pygame.time.get_ticks()
+			if nowPowerUp - lastPowerUpHit < 5000:
+				self.rect.y += 1
+			else:
+				powerUpBool = False
+		else:
+			self.rect.y += (self.speedy + bonus)
 		self.rotate()
 
 		if self.rect.top > HEIGHT+10 or self.rect.left < -25 or self.rect.right > WIDTH+20:
 			self.rect.x = random.randrange(0, WIDTH - self.rect.width)
 			self.rect.y = random.randrange(-100, -40)
 			self.speedy = random.randrange(1,8)
+
+class powerUp(pygame.sprite.Sprite):
+	def __init__(self):
+		pygame.sprite.Sprite.__init__(self)
+		self.image = powerUp_img
+		self.rect = self.image.get_rect()
+		self.rect.x = random.randrange(0, WIDTH - self.rect.width)
+		self.rect.y = random.randrange(-100, -40)
+		self.speedx = random.randrange(-3,3)
+		self.speedy = 3
+
+	def update(self):
+		self.rect.x += self.speedx
+		self.rect.y += self.speedy
+
+		if self.rect.top > HEIGHT+10 or self.rect.left < -25 or self.rect.right > WIDTH+20:
+			self.kill()
 
 class Bullet(pygame.sprite.Sprite):
 	def __init__(self, x, y):
@@ -206,11 +234,12 @@ while intro:
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
+power_ups = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
 
 #mobs generator
-for i in range(8):
+for i in range(6):
 	m = Mob()
 	all_sprites.add(m)
 	mobs.add(m)
@@ -218,9 +247,17 @@ for i in range(8):
 #game
 previous = 0
 running = True
+start = pygame.time.get_ticks()
 while running:
 	#run at right speed
 	clock.tick(FPS)
+	powerTime = pygame.time.get_ticks()
+
+	if powerTime - start > 15000:
+		start = powerTime
+		p = powerUp()
+		all_sprites.add(p)
+		power_ups.add(p)
 
 	#Process events
 	for event in pygame.event.get():
@@ -244,6 +281,11 @@ while running:
 		running = False
 
 	bullet_hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
+
+	powerUp_hits = pygame.sprite.groupcollide(power_ups, bullets, True, True)
+	if powerUp_hits:
+		powerUpBool = True
+		lastPowerUpHit = pygame.time.get_ticks()
 
 	#destroyed mobs generator
 	for h in bullet_hits:
