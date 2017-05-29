@@ -304,6 +304,8 @@ while running:
 		newRecord = True
 	print_text("SCORE = {0}".format(score), (575,10), font2, RED, BLACK)
 	print_text("RECORD = {0}".format(record), (575,30), font2, YELLOW, BLACK)
+	if powerUpBool:
+		print_text("POWER-UP ON", (575,50), font2, RED, BLACK)
 	pygame.display.flip()
 
 #save record
