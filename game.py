@@ -63,7 +63,7 @@ bullet_img = pygame.image.load('sprites/bullet.png').convert()
 bullet_img = pygame.transform.scale(bullet_img, (10,30))
 bullet_img.set_colorkey(BLACK)
 powerUp_img = pygame.image.load('sprites/powerUp.png').convert()
-powerUp_img = pygame.transform.scale(powerUp_img, (30,40))
+powerUp_img = pygame.transform.scale(powerUp_img, (50,50))
 powerUp_img.set_colorkey(BLACK)
 
 #save record
