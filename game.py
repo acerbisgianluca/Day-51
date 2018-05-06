@@ -51,17 +51,21 @@ def print_text(msg, pos, _font, color = (0,0,0), bgcolor = (255,255,255)):
 background = pygame.image.load('background/bg.png').convert()
 background = pygame.transform.scale(background, SCREED_D)
 background_rect = background.get_rect()
+
 player_img = pygame.image.load('sprites/player.png').convert()
 player_img = pygame.transform.scale(player_img, (60,50))
 player_img.set_colorkey(WHITE)
+
 mob_img = pygame.image.load('sprites/mob.png').convert()
 mob_img.set_colorkey(BLACK)
 mob_img1 = pygame.image.load('sprites/mob1.png').convert()
 mob_img1.set_colorkey(BLACK)
 mob_list = [mob_img, mob_img1]
+
 bullet_img = pygame.image.load('sprites/bullet.png').convert()
 bullet_img = pygame.transform.scale(bullet_img, (10,30))
 bullet_img.set_colorkey(BLACK)
+
 powerUp_img = pygame.image.load('sprites/powerUp.png').convert()
 powerUp_img = pygame.transform.scale(powerUp_img, (50,50))
 powerUp_img.set_colorkey(BLACK)
@@ -106,7 +110,7 @@ def showSummary():
 		print_text("RECORD = {0}".format(record), (200, 350), font1, RED, BLACK)
 	print_text("PRESS ESC TO QUIT!", (250, 500), font2, YELLOW, BLACK)
 
-#esc function
+#quit function
 def quit():
 	pygame.quit()
 	sys.exit()
@@ -184,7 +188,7 @@ class Mob(pygame.sprite.Sprite):
 			self.rect.y = random.randrange(-100, -40)
 			self.speedy = random.randrange(1,8)
 
-class powerUp(pygame.sprite.Sprite):
+class PowerUp(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = powerUp_img
@@ -255,7 +259,7 @@ while running:
 
 	if powerTime - start > 15000:
 		start = powerTime
-		p = powerUp()
+		p = PowerUp()
 		all_sprites.add(p)
 		power_ups.add(p)
 
